@@ -1,0 +1,9 @@
+{
+  "required": true,
+  "package": "dorkix.armored.elytra.mixin.client",
+  "compatibilityLevel": "JAVA_21",
+  "client": ["ArmoredElytraModelMixin"],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

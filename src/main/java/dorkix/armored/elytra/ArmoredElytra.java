@@ -1,0 +1,147 @@
+package dorkix.armored.elytra;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import net.fabricmc.api.ModInitializer;
+import net.minecraft.component.ComponentChanges;
+import net.minecraft.component.ComponentMap;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.AttributeModifiersComponent;
+import net.minecraft.component.type.LoreComponent;
+import net.minecraft.component.type.NbtComponent;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.screen.ScreenHandlerContext;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
+
+public class ArmoredElytra implements ModInitializer {
+	public static final Logger LOGGER = LoggerFactory.getLogger("ArmoredElytra");
+	public static final String MOD_ID = "armored_elytra";
+
+	public static final Identifier ELYTRA_DATA = id("elytra");
+	public static final Identifier CHESTPLATE_DATA = id("chestplate");
+
+	public static Identifier id(String path) {
+		return Identifier.of(MOD_ID, path);
+	}
+
+	@Override
+	public void onInitialize() {
+	}
+
+	public static ItemStack createArmoredElytra(ItemStack elytra, ItemStack armor,
+			ScreenHandlerContext context, String newItemName) {
+		// return on invalid items
+		if (!(armor.isIn(ItemTags.CHEST_ARMOR) && armor.getItem() instanceof ArmorItem && elytra.isOf(Items.ELYTRA)))
+			return armor;
+
+		var newElytra = elytra.copy();
+
+		NbtCompound customData = elytra.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT).copyNbt();
+		// Convert ItemStack to Nbt and store it in the custom data component of the
+		// elytra to restore the items later
+		context.run((world, blockPos) -> {
+			customData.put(ArmoredElytra.ELYTRA_DATA.toString(), elytra.encode(world.getRegistryManager()));
+			customData.put(ArmoredElytra.CHESTPLATE_DATA.toString(), armor.encode(world.getRegistryManager()));
+		});
+
+		// Copy Attribute modifiers
+
+		// this returns an empty list:
+		// armor.get(DataComponentTypes.ATTRIBUTE_MODIFIERS);
+		// have to use depracted function to get attributes
+		@SuppressWarnings("deprecation")
+		var armor_attr = armor.getItem().getAttributeModifiers();
+		var builder = AttributeModifiersComponent.builder();
+		for (var aa : armor_attr.modifiers()) {
+			builder.add(aa.attribute(), aa.modifier(), aa.slot());
+		}
+		var attr = builder.build();
+		newElytra.applyComponentsFrom(
+				ComponentMap.builder().add(DataComponentTypes.ATTRIBUTE_MODIFIERS,
+						attr).build());
+
+		// Copy Armor Trims
+
+		var trims = armor.getComponentChanges().get(DataComponentTypes.TRIM);
+		if (trims != null && trims.isPresent()) {
+			newElytra.applyChanges(ComponentChanges.builder().add(DataComponentTypes.TRIM, trims.get()).build());
+		}
+
+		// Copy Lava immunity
+
+		var fire_res = armor.get(DataComponentTypes.FIRE_RESISTANT);
+		if (fire_res != null) {
+			newElytra.applyChanges(
+					ComponentChanges.builder().add(DataComponentTypes.FIRE_RESISTANT, fire_res).build());
+		}
+
+		// Copy Enchaments
+
+		for (var ench : armor.getEnchantments().getEnchantments()) {
+			int level = 1;
+			var key = ench.getKey();
+			if (key.isPresent()) {
+				level = armor.getEnchantments().getLevel(ench);
+			}
+			newElytra.addEnchantment(ench, level);
+		}
+
+		// Set Armored elytra name or custom name from anvil
+
+		var style = Style.EMPTY.withItalic(false).withColor(Formatting.LIGHT_PURPLE);
+		Text name = Text.of(newItemName);
+		boolean hasNewName = newItemName != null && !newItemName.isEmpty();
+		if (!hasNewName) {
+			name = Text.translatableWithFallback("item." + ArmoredElytra.MOD_ID + ".item_name", "Armored Elytra");
+		}
+		newElytra.applyComponentsFrom(
+				ComponentMap.builder().add(DataComponentTypes.CUSTOM_NAME,
+						name.copy().setStyle(
+								Style.EMPTY.withItalic(hasNewName).withColor(Formatting.LIGHT_PURPLE)))
+						.build());
+
+		// Set description
+
+		newElytra.applyComponentsFrom(
+				ComponentMap.builder()
+						.add(DataComponentTypes.LORE,
+								new LoreComponent(List.of(Text.of(" +").copy().setStyle(style),
+										armor.getName().copy().setStyle(style))))
+						.build());
+
+		// set Custom data
+		newElytra.applyComponentsFrom(
+				ComponentMap.builder().add(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(customData)).build());
+
+		return newElytra;
+	}
+
+	public static boolean isArmoredElytra(ItemStack elytra) {
+		if (!elytra.isOf(Items.ELYTRA)) {
+			return false;
+		}
+
+		NbtCompound customData = elytra
+				.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT)
+				.copyNbt();
+
+		NbtCompound elytraData = customData.getCompound(ArmoredElytra.ELYTRA_DATA.toString());
+		NbtCompound armorData = customData.getCompound(ArmoredElytra.CHESTPLATE_DATA.toString());
+
+		if (elytraData.isEmpty() || armorData.isEmpty()) {
+			return false;
+		}
+
+		return true;
+	}
+}

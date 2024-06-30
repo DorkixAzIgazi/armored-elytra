@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "armored-elytra",
+  "version": "${version}",
+  "name": "Armored Elytra",
+  "description": "All in one elytra and chestplate combiner mod!",
+  "authors": ["Dorkix"],
+  "contact": {
+    "homepage": "https://modrinth.com/project/elytra-armor",
+    "sources": "https://github.com/DorkixAzIgazi/armored-elytra"
+  },
+  "license": "MIT",
+  "icon": "assets/armored-elytra/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["dorkix.armored.elytra.ArmoredElytra"],
+    "client": ["dorkix.armored.elytra.ArmoredElytraClient"],
+    "fabric-datagen": ["dorkix.armored.elytra.ArmoredElytraDataGenerator"]
+  },
+  "mixins": [
+    "armored-elytra.mixins.json",
+    {
+      "config": "armored-elytra.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.11",
+    "minecraft": "~1.21",
+    "java": ">=21",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}

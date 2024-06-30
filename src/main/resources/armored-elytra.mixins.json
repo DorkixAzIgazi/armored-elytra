@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "dorkix.armored.elytra.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "AnvilMenuMixin",
+    "GrindStoneMixin",
+    "GrindStoneMixin$GrindstoneScreenHandlerAccessor",
+    "GrindStoneMixin$ResultSlotMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
