@@ -6,7 +6,9 @@
     "AnvilMenuMixin",
     "GrindStoneMixin",
     "GrindStoneMixin$GrindstoneScreenHandlerAccessor",
-    "GrindStoneMixin$ResultSlotMixin"
+    "GrindStoneMixin$ResultSlotMixin",
+    "ArmoredElytraItemMixin",
+    "ArmoredElytraItemMixin$ModelMixin"
   ],
   "injectors": {
     "defaultRequire": 1

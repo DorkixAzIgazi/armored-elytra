@@ -1,0 +1,410 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "item/elytra"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "broken": 1
+      },
+      "model": "item/broken_elytra"
+    },
+    {
+      "model": "armored_elytra:item/elytra_leather_chestplate",
+      "predicate": {
+        "armored": 0.100
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_leather_chestplate_quartz_trim",
+      "predicate": {
+        "armored": 0.101
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_leather_chestplate_iron_trim",
+      "predicate": {
+        "armored": 0.102
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_leather_chestplate_netherite_trim",
+      "predicate": {
+        "armored": 0.103
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_leather_chestplate_redstone_trim",
+      "predicate": {
+        "armored": 0.104
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_leather_chestplate_copper_trim",
+      "predicate": {
+        "armored": 0.105
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_leather_chestplate_gold_trim",
+      "predicate": {
+        "armored": 0.106
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_leather_chestplate_emerald_trim",
+      "predicate": {
+        "armored": 0.107
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_leather_chestplate_diamond_trim",
+      "predicate": {
+        "armored": 0.108
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_leather_chestplate_lapis_trim",
+      "predicate": {
+        "armored": 0.109
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_leather_chestplate_amethyst_trim",
+      "predicate": {
+        "armored": 0.110
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_chainmail_chestplate",
+      "predicate": {
+        "armored": 0.200
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_chainmail_chestplate_quartz_trim",
+      "predicate": {
+        "armored": 0.201
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_chainmail_chestplate_iron_trim",
+      "predicate": {
+        "armored": 0.202
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_chainmail_chestplate_netherite_trim",
+      "predicate": {
+        "armored": 0.203
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_chainmail_chestplate_redstone_trim",
+      "predicate": {
+        "armored": 0.204
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_chainmail_chestplate_copper_trim",
+      "predicate": {
+        "armored": 0.205
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_chainmail_chestplate_gold_trim",
+      "predicate": {
+        "armored": 0.206
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_chainmail_chestplate_emerald_trim",
+      "predicate": {
+        "armored": 0.207
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_chainmail_chestplate_diamond_trim",
+      "predicate": {
+        "armored": 0.208
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_chainmail_chestplate_lapis_trim",
+      "predicate": {
+        "armored": 0.209
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_chainmail_chestplate_amethyst_trim",
+      "predicate": {
+        "armored": 0.210
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_iron_chestplate",
+      "predicate": {
+        "armored": 0.300
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_iron_chestplate_quartz_trim",
+      "predicate": {
+        "armored": 0.301
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_iron_chestplate_iron_darker_trim",
+      "predicate": {
+        "armored": 0.302
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_iron_chestplate_netherite_trim",
+      "predicate": {
+        "armored": 0.303
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_iron_chestplate_redstone_trim",
+      "predicate": {
+        "armored": 0.304
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_iron_chestplate_copper_trim",
+      "predicate": {
+        "armored": 0.305
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_iron_chestplate_gold_trim",
+      "predicate": {
+        "armored": 0.306
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_iron_chestplate_emerald_trim",
+      "predicate": {
+        "armored": 0.307
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_iron_chestplate_diamond_trim",
+      "predicate": {
+        "armored": 0.308
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_iron_chestplate_lapis_trim",
+      "predicate": {
+        "armored": 0.309
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_iron_chestplate_amethyst_trim",
+      "predicate": {
+        "armored": 0.310
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_golden_chestplate",
+      "predicate": {
+        "armored": 0.400
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_golden_chestplate_quartz_trim",
+      "predicate": {
+        "armored": 0.401
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_golden_chestplate_iron_trim",
+      "predicate": {
+        "armored": 0.402
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_golden_chestplate_netherite_trim",
+      "predicate": {
+        "armored": 0.403
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_golden_chestplate_redstone_trim",
+      "predicate": {
+        "armored": 0.404
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_golden_chestplate_copper_trim",
+      "predicate": {
+        "armored": 0.405
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_golden_chestplate_gold_darker_trim",
+      "predicate": {
+        "armored": 0.406
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_golden_chestplate_emerald_trim",
+      "predicate": {
+        "armored": 0.407
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_golden_chestplate_diamond_trim",
+      "predicate": {
+        "armored": 0.408
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_golden_chestplate_lapis_trim",
+      "predicate": {
+        "armored": 0.409
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_golden_chestplate_amethyst_trim",
+      "predicate": {
+        "armored": 0.410
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_diamond_chestplate",
+      "predicate": {
+        "armored": 0.500
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_diamond_chestplate_quartz_trim",
+      "predicate": {
+        "armored": 0.501
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_diamond_chestplate_iron_trim",
+      "predicate": {
+        "armored": 0.502
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_diamond_chestplate_netherite_trim",
+      "predicate": {
+        "armored": 0.503
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_diamond_chestplate_redstone_trim",
+      "predicate": {
+        "armored": 0.504
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_diamond_chestplate_copper_trim",
+      "predicate": {
+        "armored": 0.505
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_diamond_chestplate_gold_trim",
+      "predicate": {
+        "armored": 0.506
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_diamond_chestplate_emerald_trim",
+      "predicate": {
+        "armored": 0.507
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_diamond_chestplate_diamond_darker_trim",
+      "predicate": {
+        "armored": 0.508
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_diamond_chestplate_lapis_trim",
+      "predicate": {
+        "armored": 0.509
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_diamond_chestplate_amethyst_trim",
+      "predicate": {
+        "armored": 0.510
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_netherite_chestplate",
+      "predicate": {
+        "armored": 0.600
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_netherite_chestplate_quartz_trim",
+      "predicate": {
+        "armored": 0.601
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_netherite_chestplate_iron_trim",
+      "predicate": {
+        "armored": 0.602
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_netherite_chestplate_netherite_darker_trim",
+      "predicate": {
+        "armored": 0.603
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_netherite_chestplate_redstone_trim",
+      "predicate": {
+        "armored": 0.604
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_netherite_chestplate_copper_trim",
+      "predicate": {
+        "armored": 0.605
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_netherite_chestplate_gold_trim",
+      "predicate": {
+        "armored": 0.606
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_netherite_chestplate_emerald_trim",
+      "predicate": {
+        "armored": 0.607
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_netherite_chestplate_diamond_trim",
+      "predicate": {
+        "armored": 0.608
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_netherite_chestplate_lapis_trim",
+      "predicate": {
+        "armored": 0.609
+      }
+    },
+    {
+      "model": "armored_elytra:item/elytra_netherite_chestplate_amethyst_trim",
+      "predicate": {
+        "armored": 0.610
+      }
+    }
+  ]
+}
