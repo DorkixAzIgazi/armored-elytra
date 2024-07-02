@@ -150,7 +150,7 @@ public abstract class GrindStoneMixin extends ScreenHandler {
                     int elytraLevel = sourceElytra.getEnchantments().getLevel(ce);
                     int armorLevel = sourceArmor.getEnchantments().getLevel(ce);
 
-                    if (currentLevel > elytraLevel || currentLevel > armorLevel) {
+                    if (currentLevel > elytraLevel && elytraLevel > 0 && elytraLevel >= armorLevel) {
                         sourceElytra.addEnchantment(ce, currentLevel);
                     }
 
