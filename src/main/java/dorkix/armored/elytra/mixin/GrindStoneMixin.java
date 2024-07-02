@@ -105,15 +105,16 @@ public abstract class GrindStoneMixin extends ScreenHandler {
 
         // try split the elytra for the given slot
         private boolean trySplitArmoredElytra(int slot) {
+            var armoredElytra = ((GrindstoneScreenHandlerAccessor) field_16780).getInput().getStack(slot);
             // get the armored elytra source items nbt data
-            NbtCompound customData = ((GrindstoneScreenHandlerAccessor) field_16780).getInput().getStack(slot)
+            NbtCompound customData = armoredElytra
                     .getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT)
                     .copyNbt();
 
             NbtCompound elytraData = customData.getCompound(ArmoredElytra.ELYTRA_DATA.toString());
+            NbtCompound armorData = customData.getCompound(ArmoredElytra.CHESTPLATE_DATA.toString());
             // if not an armored elytra return to normal functioning
-            if (elytraData.isEmpty() ||
-                    customData.getCompound(ArmoredElytra.CHESTPLATE_DATA.toString()).isEmpty()) {
+            if (elytraData.isEmpty() || armorData.isEmpty()) {
                 return false;
             }
             var context = ((GrindstoneScreenHandlerAccessor) field_16780).getContext();
@@ -129,11 +130,34 @@ public abstract class GrindStoneMixin extends ScreenHandler {
                         SoundCategory.BLOCKS);
 
                 // replace the input armored elytra with the source elytra
+                var sourceElytra = ItemStack
+                        .fromNbt(world.getRegistryManager(),
+                                elytraData)
+                        .orElse(ItemStack.EMPTY);
+                var sourceArmor = ItemStack
+                        .fromNbt(world.getRegistryManager(),
+                                elytraData)
+                        .orElse(ItemStack.EMPTY);
+
+                // check for compatible later added enchants
+                var currentEnchants = armoredElytra.getEnchantments().getEnchantments();
+                for (var ce : currentEnchants) {
+                    if (!ce.value().isSupportedItem(sourceElytra)) {
+                        continue;
+                    }
+
+                    int currentLevel = armoredElytra.getEnchantments().getLevel(ce);
+                    int elytraLevel = sourceElytra.getEnchantments().getLevel(ce);
+                    int armorLevel = sourceArmor.getEnchantments().getLevel(ce);
+
+                    if (currentLevel > elytraLevel || currentLevel > armorLevel) {
+                        sourceElytra.addEnchantment(ce, currentLevel);
+                    }
+
+                }
+
                 ((GrindstoneScreenHandlerAccessor) field_16780).getInput().setStack(slot,
-                        ItemStack
-                                .fromNbt(world.getRegistryManager(),
-                                        elytraData)
-                                .orElse(ItemStack.EMPTY));
+                        sourceElytra);
             });
             return true;
         }

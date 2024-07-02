@@ -86,11 +86,11 @@ public class ArmoredElytra implements ModInitializer {
 		}
 
 		var armorType = armor.getItem().toString();
-		if(armorType.equals(Items.LEATHER_CHESTPLATE.toString())) {
+		if (armorType.equals(Items.LEATHER_CHESTPLATE.toString())) {
 			var color = armor.get(DataComponentTypes.DYED_COLOR);
-			if(color != null) {
+			if (color != null) {
 				newElytra.applyChanges(
-					ComponentChanges.builder().add(DataComponentTypes.DYED_COLOR, color).build());
+						ComponentChanges.builder().add(DataComponentTypes.DYED_COLOR, color).build());
 			}
 		}
 
@@ -123,9 +123,14 @@ public class ArmoredElytra implements ModInitializer {
 				ComponentMap.builder()
 						.add(DataComponentTypes.LORE,
 								new LoreComponent(List.of(
-									Text.of(""),
-									Text.translatableWithFallback("item." + ArmoredElytra.MOD_ID + ".item_lore_text", "With chesplate:").copy().setStyle(Style.EMPTY.withItalic(false).withColor(Formatting.GRAY)),
-									Text.of(" ").copy().append(armor.getName()).setStyle(Style.EMPTY.withItalic(armorHasCustomName).withColor(Formatting.LIGHT_PURPLE)))))
+										Text.of(""),
+										Text.translatableWithFallback(
+												"item." + ArmoredElytra.MOD_ID + ".item_lore_text", "With chesplate:")
+												.copy()
+												.setStyle(Style.EMPTY.withItalic(false).withColor(Formatting.GRAY)),
+										Text.of(" ").copy().append(armor.getName())
+												.setStyle(Style.EMPTY.withItalic(armorHasCustomName)
+														.withColor(Formatting.LIGHT_PURPLE)))))
 						.build());
 
 		// set Custom data
