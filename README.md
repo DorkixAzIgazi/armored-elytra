@@ -9,7 +9,7 @@
 ![Mod](https://img.shields.io/badge/mod_version-1.0.0-3b8526?style=flat-square)
 
 ![Modrinth](https://img.shields.io/badge/modrinth-soon-1bd96a?style=flat-square&color=1bd96a)
-![Curseforge](https://img.shields.io/badge/curseforge-soon-f16536?style=flat-square&color=f16536&)
+![Curseforge](https://img.shields.io/badge/curseforge-Armored_Elytra_--_Fabric-f16536?style=flat-square&color=f16536&link=https%3A%2F%2Fwww.curseforge.com%2Fminecraft%2Fmc-mods%2Farmored-elytra-fabric)
 
 ## About the mod
 
