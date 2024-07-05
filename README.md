@@ -8,7 +8,7 @@
 ![Version](https://img.shields.io/badge/Minecraft_version-1.21-3b8526?style=flat-square&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAGUExURf///wAAAFXC034AAAACdFJOU/8A5bcwSgAAAAlwSFlzAAAOwwAADsMBx2+oZAAAAIZJREFUeF7tzjEKwDAMBEH7/59Oc7gTNoFgBWZLcYgZ83IAAAAAAAAA/QBjU2ZlmZVltgIAAAAAAAAAAAAAAAAAAOgH2JU/ZZkdBwAAAAAAANAfkL+vy5syAAAAAAAAAAAAAAAAAACA/wFyLstslXMZAAAAAAAAQH/A1wEAAAAAAABcBsz5AFHFLAEnEyoZAAAAAElFTkSuQmCC)
 ![Mod](https://img.shields.io/badge/mod_version-1.0.0-3b8526?style=flat-square)
 
-![Modrinth](https://img.shields.io/badge/modrinth-soon-1bd96a?style=flat-square&color=1bd96a)
+![Modrinth](https://img.shields.io/badge/modrinth-Armored_Elytra-1bd96a?style=flat-square&color=1bd96a&link=https%3A%2F%2Fmodrinth.com%2Fmod%2Felytra-armor)
 ![Curseforge](https://img.shields.io/badge/curseforge-Armored_Elytra_--_Fabric-f16536?style=flat-square&color=f16536&link=https%3A%2F%2Fwww.curseforge.com%2Fminecraft%2Fmc-mods%2Farmored-elytra-fabric)
 
 ## About the mod
