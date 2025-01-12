@@ -16,6 +16,7 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.text.Style;
@@ -49,18 +50,16 @@ public class ArmoredElytra implements ModInitializer {
 		NbtCompound customData = elytra.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT).copyNbt();
 		// Convert ItemStack to Nbt and store it in the custom data component of the
 		// elytra to restore the items later
+
 		context.run((world, blockPos) -> {
-			customData.put(ArmoredElytra.ELYTRA_DATA.toString(), elytra.encode(world.getRegistryManager()));
-			customData.put(ArmoredElytra.CHESTPLATE_DATA.toString(), armor.encode(world.getRegistryManager()));
+			customData.put(ArmoredElytra.ELYTRA_DATA.toString(),
+					elytra.toNbt(world.getRegistryManager()));
+			customData.put(ArmoredElytra.CHESTPLATE_DATA.toString(),
+					armor.toNbt(world.getRegistryManager()));
 		});
 
 		// Copy Attribute modifiers
-
-		// this returns an empty list:
-		// armor.get(DataComponentTypes.ATTRIBUTE_MODIFIERS);
-		// have to use depracted function to get attributes
-		@SuppressWarnings("deprecation")
-		var armor_attr = armor.getItem().getAttributeModifiers();
+		var armor_attr = armor.get(DataComponentTypes.ATTRIBUTE_MODIFIERS);
 		var builder = AttributeModifiersComponent.builder();
 		for (var aa : armor_attr.modifiers()) {
 			builder.add(aa.attribute(), aa.modifier(), aa.slot());
@@ -74,15 +73,16 @@ public class ArmoredElytra implements ModInitializer {
 
 		var trims = armor.getComponentChanges().get(DataComponentTypes.TRIM);
 		if (trims != null && trims.isPresent()) {
-			newElytra.applyChanges(ComponentChanges.builder().add(DataComponentTypes.TRIM, trims.get()).build());
+			newElytra.applyChanges(ComponentChanges.builder().add(DataComponentTypes.TRIM,
+					trims.get()).build());
 		}
 
 		// Copy Lava immunity
-
-		var fire_res = armor.get(DataComponentTypes.FIRE_RESISTANT);
-		if (fire_res != null) {
+		var fire_res = armor.get(DataComponentTypes.DAMAGE_RESISTANT);
+		if (fire_res != null && fire_res.types() == DamageTypeTags.IS_FIRE) {
 			newElytra.applyChanges(
-					ComponentChanges.builder().add(DataComponentTypes.FIRE_RESISTANT, fire_res).build());
+					ComponentChanges.builder().add(DataComponentTypes.DAMAGE_RESISTANT,
+							fire_res).build());
 		}
 
 		var armorType = armor.getItem().toString();
@@ -90,7 +90,8 @@ public class ArmoredElytra implements ModInitializer {
 			var color = armor.get(DataComponentTypes.DYED_COLOR);
 			if (color != null) {
 				newElytra.applyChanges(
-						ComponentChanges.builder().add(DataComponentTypes.DYED_COLOR, color).build());
+						ComponentChanges.builder().add(DataComponentTypes.DYED_COLOR,
+								color).build());
 			}
 		}
 

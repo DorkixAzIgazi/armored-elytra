@@ -1,5 +1,6 @@
 package dorkix.armored.elytra.mixin;
 
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,12 +18,13 @@ import net.minecraft.screen.ForgingScreenHandler;
 import net.minecraft.screen.Property;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.screen.slot.ForgingSlotsManager;
 
 @Mixin(AnvilScreenHandler.class)
 public abstract class AnvilMenuMixin extends ForgingScreenHandler {
-    public AnvilMenuMixin(ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory,
-            ScreenHandlerContext context) {
-        super(type, syncId, playerInventory, context);
+    public AnvilMenuMixin(@Nullable ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory,
+            ScreenHandlerContext context, ForgingSlotsManager forgingSlotsManager) {
+        super(type, syncId, playerInventory, context, forgingSlotsManager);
     }
 
     // hack access to levelCost member, if this is not set the item cant be removed
