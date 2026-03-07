@@ -9,41 +9,41 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import dorkix.armored.elytra.ArmoredElytra;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.screen.AnvilScreenHandler;
-import net.minecraft.screen.ForgingScreenHandler;
-import net.minecraft.screen.Property;
-import net.minecraft.screen.ScreenHandlerContext;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.screen.slot.ForgingSlotsManager;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AnvilMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.DataSlot;
+import net.minecraft.world.inventory.ItemCombinerMenu;
+import net.minecraft.world.inventory.ItemCombinerMenuSlotDefinition;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
-@Mixin(AnvilScreenHandler.class)
-public abstract class AnvilMenuMixin extends ForgingScreenHandler {
-    public AnvilMenuMixin(@Nullable ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory,
-            ScreenHandlerContext context, ForgingSlotsManager forgingSlotsManager) {
+@Mixin(AnvilMenu.class)
+public abstract class AnvilMenuMixin extends ItemCombinerMenu {
+    public AnvilMenuMixin(@Nullable MenuType<?> type, int syncId, Inventory playerInventory,
+            ContainerLevelAccess context, ItemCombinerMenuSlotDefinition forgingSlotsManager) {
         super(type, syncId, playerInventory, context, forgingSlotsManager);
     }
 
-    // hack access to levelCost member, if this is not set the item cant be removed
+    // hack access to cost member, if this is not set the item cant be removed
     // from the anvil
     @Shadow
     @Final
-    private Property levelCost;
+    private DataSlot cost;
 
     @Shadow
-    private String newItemName;
+    private String itemName;
 
-    // At all return statements of the AnvilScreenHandler.updateResult() function
+    // At all return statements of the AnvilMenu.createResult() function
     // check if the inputs are a chestplate and elytra
     // and set the result regardless of what the vanilla code set (this might
-    // overrride other mod code, sorry :( )
-    @Inject(method = "Lnet/minecraft/screen/AnvilScreenHandler;updateResult()V", at = @At("RETURN"))
+    // override other mod code, sorry :( )
+    @Inject(method = "Lnet/minecraft/world/inventory/AnvilMenu;createResult()V", at = @At("RETURN"))
     private void showCombinedResult(CallbackInfo ci) {
-        var inputItem1 = input.getStack(0);
-        var inputItem2 = input.getStack(1);
+        var inputItem1 = inputSlots.getItem(0);
+        var inputItem2 = inputSlots.getItem(1);
 
         if (!tryCombine(inputItem1, inputItem2) && !tryCombine(inputItem2, inputItem1)) {
             return;
@@ -51,17 +51,17 @@ public abstract class AnvilMenuMixin extends ForgingScreenHandler {
     }
 
     private boolean tryCombine(ItemStack elytra, ItemStack armor) {
-        if (elytra.isOf(Items.ELYTRA) && armor.isIn(ItemTags.CHEST_ARMOR)) {
+        if (elytra.is(Items.ELYTRA) && armor.is(ItemTags.CHEST_ARMOR)) {
 
-            // Do not allow infinte combination of armored elytras
+            // Do not allow infinite combination of armored elytras
             if (ArmoredElytra.isArmoredElytra(elytra)) {
                 return false;
             }
 
-            output.setStack(0, ArmoredElytra.createArmoredElytra(
-                    elytra, armor, this.context, newItemName));
-            levelCost.set(1);
-            sendContentUpdates();
+            resultSlots.setItem(0, ArmoredElytra.createArmoredElytra(
+                    elytra, armor, this.access, itemName));
+            cost.set(1);
+            broadcastChanges();
             return true;
         }
 
