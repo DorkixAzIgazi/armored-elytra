@@ -46,6 +46,7 @@ public class ArmoredElytra implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		DebugCommand.register();
 	}
 
 	public static ItemStack createArmoredElytra(ItemStack elytra, ItemStack armor,

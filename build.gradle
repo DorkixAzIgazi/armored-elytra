@@ -33,6 +33,7 @@ loom {
 fabricApi {
 	configureDataGeneration {
 		client = true
+		outputDirectory = file("src/client/generated/resources")
 	}
 }
 

@@ -34,15 +34,15 @@ All logic is handled on the server, client side install is only required for mod
 
 #### Vanilla Tweaks
 
-The mod is compatible with the vanilla tweaks Armored Elytra datapack since 1.21.5 v1.6.0.
-Installing the mod on the client will make the player models render with the armor and the elytra textures.
-The mod supports splitting armored elytras made with the datapack.
+The mod is compatible with the Vanilla Tweaks Armored Elytra datapack since version 1.21.5 v1.6.0.
+Installing the mod on the client will make the player models render with both the armor and the elytra textures.
+The mod supports splitting armored elytras created with the datapack.
 
 ### Client side rendering
 
 #### Player model
 
-If installed on client side both the elytra and the chestplate is visible.
+If installed on the client side, both the elytra and the chestplate are visible.
 
 ![Inventory](/docs/inventory.png)
 ![Thirdperson](/docs/thirdperson.png)
@@ -50,8 +50,10 @@ If installed on client side both the elytra and the chestplate is visible.
 
 #### Custom item icons
 
-Armor type, trim color and leather color icons with elytra at the back.
+Armor type, trim color, and leather color icons with the elytra shown at the back.
 
 Custom icons are visible for players who have the mod or the texturepack installed on the client.
 
 ![Custom icons](/docs/custom_item_models.png)
+
+> **Using a custom texture pack?** See the [guide for generating textures from a resource pack](docs/custom-textures-datagen.md) to match the item icons to your pack's artwork.
