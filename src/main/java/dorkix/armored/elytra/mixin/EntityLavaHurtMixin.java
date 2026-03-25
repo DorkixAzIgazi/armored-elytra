@@ -34,7 +34,7 @@ public abstract class EntityLavaHurtMixin {
                     // Handle Vanilla Tweaks data
                     bundleContents.items().forEach(item -> {
                         if (item.is(Items.NETHERITE_CHESTPLATE)) {
-                            thisObject.setItem(item);
+                            thisObject.setItem(item.create());
                         }
                     });
                 } else {

@@ -20,6 +20,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.equipment.trim.ArmorTrim;
@@ -31,13 +32,13 @@ import net.minecraft.world.item.equipment.trim.TrimPatterns;
 
 public class DebugCommand {
 
-  private static final List<ItemStack> NON_LEATHER_ARMORS = List.of(
-      new ItemStack(Items.CHAINMAIL_CHESTPLATE),
-      new ItemStack(Items.COPPER_CHESTPLATE),
-      new ItemStack(Items.DIAMOND_CHESTPLATE),
-      new ItemStack(Items.GOLDEN_CHESTPLATE),
-      new ItemStack(Items.IRON_CHESTPLATE),
-      new ItemStack(Items.NETHERITE_CHESTPLATE));
+  private static final List<ItemStackTemplate> NON_LEATHER_ARMORS = List.of(
+      new ItemStackTemplate(Items.CHAINMAIL_CHESTPLATE),
+      new ItemStackTemplate(Items.COPPER_CHESTPLATE),
+      new ItemStackTemplate(Items.DIAMOND_CHESTPLATE),
+      new ItemStackTemplate(Items.GOLDEN_CHESTPLATE),
+      new ItemStackTemplate(Items.IRON_CHESTPLATE),
+      new ItemStackTemplate(Items.NETHERITE_CHESTPLATE));
 
   // All trim materials supported by this mod
   private static final List<ResourceKey<TrimMaterial>> TRIM_MATERIAL_KEYS = List.of(
@@ -92,7 +93,7 @@ public class DebugCommand {
     // ── no trim: normal elytra + broken elytra, all armor variants ──────
     for (var baseElytra : List.of(elytra, brokenElytra)) {
       for (var armor : NON_LEATHER_ARMORS) {
-        give(level, x, y, z, ArmoredElytra.createArmoredElytra(baseElytra.copy(), armor.copy(), access, null));
+        give(level, x, y, z, ArmoredElytra.createArmoredElytra(baseElytra.copy(), armor.create(), access, null));
       }
       give(level, x, y, z, ArmoredElytra.createArmoredElytra(baseElytra.copy(), leatherDefault.copy(), access, null));
       give(level, x, y, z, ArmoredElytra.createArmoredElytra(baseElytra.copy(), leatherNoColor.copy(), access, null));
@@ -106,7 +107,7 @@ public class DebugCommand {
       var trim = new ArmorTrim(materialHolder, sentryPattern);
 
       for (var armor : NON_LEATHER_ARMORS) {
-        var armorWithTrim = armor.copy();
+        var armorWithTrim = armor.create();
         armorWithTrim.set(DataComponents.TRIM, trim);
         give(level, x, y, z, ArmoredElytra.createArmoredElytra(elytra.copy(), armorWithTrim, access, null));
       }

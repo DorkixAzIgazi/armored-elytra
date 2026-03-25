@@ -69,6 +69,15 @@ public class ArmoredElytra implements ModInitializer {
 					ItemStack.CODEC.encodeStart(RegistryOps.create(NbtOps.INSTANCE, world.registryAccess()), armor).getOrThrow());
 		});
 
+		// ChestPlate Durability
+		if (armor.getMaxDamage() > newElytra.getMaxDamage()) {
+			newElytra.set(DataComponents.MAX_DAMAGE, armor.getMaxDamage());
+			newElytra.set(DataComponents.DAMAGE, armor.getDamageValue());
+		} else {
+			newElytra.set(DataComponents.MAX_DAMAGE, elytra.getMaxDamage());
+			newElytra.set(DataComponents.DAMAGE, elytra.getDamageValue());
+		}
+
 		// Copy Attribute modifiers
 		var armor_attr = armor.get(DataComponents.ATTRIBUTE_MODIFIERS);
 		var builder = ItemAttributeModifiers.builder();
@@ -81,9 +90,9 @@ public class ArmoredElytra implements ModInitializer {
 						attr).build());
 
 		// Copy Armor Trims
-		var trims = armor.getComponentsPatch().get(DataComponents.TRIM);
-		if (trims != null && trims.isPresent()) {
-			customData.putString(ArmoredElytra.TRIM_MATERIAL_DATA.toString(), trims.get().material().getRegisteredName());
+		var trims = armor.get(DataComponents.TRIM);
+		if (trims != null) {
+			customData.putString(ArmoredElytra.TRIM_MATERIAL_DATA.toString(), trims.material().getRegisteredName());
 		}
 
 		var armorType = armor.getItem().toString();
@@ -124,11 +133,11 @@ public class ArmoredElytra implements ModInitializer {
 
 		List<Component> loreTexts = Lists.newArrayList();
 
-		if (trims != null && trims.isPresent() && loreTexts != null) {
+		if (trims != null && loreTexts != null) {
 			List<Component> trimTexts = Lists.newArrayList();
 			// We cannot add the trim component to the armored elytra because of the
 			// rendering, it needs to be faked with the lore component
-			trims.get().addToTooltip(Item.TooltipContext.EMPTY, trimTexts::add, TooltipFlag.NORMAL,
+			trims.addToTooltip(Item.TooltipContext.EMPTY, trimTexts::add, TooltipFlag.NORMAL,
 					armor.getComponents());
 
 			var upgradeText = trimTexts.get(0).copy()

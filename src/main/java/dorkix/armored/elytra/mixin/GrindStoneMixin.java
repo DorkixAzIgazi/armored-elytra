@@ -81,7 +81,7 @@ public abstract class GrindStoneMixin extends AbstractContainerMenu {
             bundleContents.items().forEach(item -> {
                 if (item.is(ItemTags.CHEST_ARMOR)) {
                     this.access.execute((world, blockpos) -> {
-                        this.resultSlots.setItem(slot, item);
+                        this.resultSlots.setItem(slot, item.create());
                     });
                     broadcastChanges();
                     return;
@@ -130,13 +130,13 @@ public abstract class GrindStoneMixin extends AbstractContainerMenu {
             super(inventory, slot, x, y);
         }
 
-        @Shadow
+        @Shadow(aliases = "this$0")
         @Final
-        GrindstoneMenu field_16780;
+        GrindstoneMenu grindstoneMenu;
 
         // try split the elytra for the given slot
         private boolean trySplitArmoredElytra(int slot) {
-            var armoredElytra = ((GrindstoneScreenHandlerAccessor) field_16780).getRepairSlots().getItem(slot);
+            var armoredElytra = ((GrindstoneScreenHandlerAccessor) grindstoneMenu).getRepairSlots().getItem(slot);
             // get the armored elytra source items nbt data
             CompoundTag customData = armoredElytra
                     .getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY)
@@ -156,7 +156,7 @@ public abstract class GrindStoneMixin extends AbstractContainerMenu {
             if (elytraData.isEmpty() || armorData.isEmpty()) {
                 return false;
             }
-            var context = ((GrindstoneScreenHandlerAccessor) field_16780).getAccess();
+            var context = ((GrindstoneScreenHandlerAccessor) grindstoneMenu).getAccess();
 
             context.execute((world, blockPos) -> {
                 // spawn a little xp
@@ -194,7 +194,7 @@ public abstract class GrindStoneMixin extends AbstractContainerMenu {
 
                 }
 
-                ((GrindstoneScreenHandlerAccessor) field_16780).getRepairSlots().setItem(slot,
+                ((GrindstoneScreenHandlerAccessor) grindstoneMenu).getRepairSlots().setItem(slot,
                         sourceElytra);
             });
             return true;
@@ -202,20 +202,20 @@ public abstract class GrindStoneMixin extends AbstractContainerMenu {
 
         // try split the elytra for the given slot (Vanilla Tweaks Format)
         private boolean trySplitVTArmoredElytra(int slot) {
-            BundleContents bundleContents = ((GrindstoneScreenHandlerAccessor) field_16780)
+            BundleContents bundleContents = ((GrindstoneScreenHandlerAccessor) grindstoneMenu)
                     .getRepairSlots().getItem(slot).getOrDefault(DataComponents.BUNDLE_CONTENTS,
                             BundleContents.EMPTY);
             if (bundleContents.isEmpty())
                 return false;
 
-            var context = ((GrindstoneScreenHandlerAccessor) field_16780).getAccess();
+            var context = ((GrindstoneScreenHandlerAccessor) grindstoneMenu).getAccess();
             bundleContents.items().forEach(item -> {
                 if (item.is(Items.ELYTRA)) {
                     context.execute((world, blockPos) -> {
                         world.playSound(null, blockPos, SoundEvents.GRINDSTONE_USE,
                                 SoundSource.BLOCKS);
-                        ((GrindstoneScreenHandlerAccessor) field_16780).getRepairSlots().setItem(slot,
-                                item);
+                        ((GrindstoneScreenHandlerAccessor) grindstoneMenu).getRepairSlots().setItem(slot,
+                                item.create());
                     });
                 }
             });

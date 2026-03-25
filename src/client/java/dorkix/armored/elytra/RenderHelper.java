@@ -9,6 +9,7 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.component.CustomData;
@@ -23,9 +24,9 @@ public class RenderHelper {
     // Vanilla Tweaks compatibility
     BundleContents bundleContents = stack.getOrDefault(DataComponents.BUNDLE_CONTENTS, BundleContents.EMPTY);
     if (!bundleContents.isEmpty()) {
-      for (ItemStack item : bundleContents.items()) {
+      for (ItemStackTemplate item : bundleContents.items()) {
         if (item.is(ItemTags.CHEST_ARMOR)) {
-          return item;
+          return item.create();
         }
       }
     }
@@ -56,9 +57,9 @@ public class RenderHelper {
     // Vanilla Tweaks compatibility
     BundleContents bundleContents = stack.getOrDefault(DataComponents.BUNDLE_CONTENTS, BundleContents.EMPTY);
     if (!bundleContents.isEmpty()) {
-      for (ItemStack item : bundleContents.items()) {
+      for (ItemStackTemplate item : bundleContents.items()) {
         if (item.is(Items.ELYTRA)) {
-          return item;
+          return item.create();
         }
       }
     }

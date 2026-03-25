@@ -30,7 +30,7 @@ import com.google.gson.JsonObject;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
@@ -124,9 +124,9 @@ public class ArmoredElytraDataGenerator implements DataGeneratorEntrypoint {
 		private static final Logger LOGGER = LoggerFactory.getLogger(ArmoredElytraResourceGenerator.class);
 		private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-		private final FabricDataOutput output;
+		private final FabricPackOutput output;
 
-		public ArmoredElytraResourceGenerator(FabricDataOutput output) {
+		public ArmoredElytraResourceGenerator(FabricPackOutput output) {
 			this.output = output;
 		}
 
