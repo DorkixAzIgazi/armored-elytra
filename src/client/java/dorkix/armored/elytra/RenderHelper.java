@@ -2,79 +2,82 @@ package dorkix.armored.elytra;
 
 import java.util.Optional;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.BundleContentsComponent;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.registry.RegistryOps;
-import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.resources.RegistryOps;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.BundleContents;
+import net.minecraft.world.item.component.CustomData;
 
 public class RenderHelper {
 
   public static ItemStack modifyStackWithArmor(ItemStack stack) {
-    var player = MinecraftClient.getInstance().player;
-    if (!stack.isOf(Items.ELYTRA) || player == null)
+    var player = Minecraft.getInstance().player;
+    if (!stack.is(Items.ELYTRA) || player == null)
       return stack;
-    
+
     // Vanilla Tweaks compatibility
-    BundleContentsComponent bundleContents = stack.getOrDefault(DataComponentTypes.BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
+    BundleContents bundleContents = stack.getOrDefault(DataComponents.BUNDLE_CONTENTS, BundleContents.EMPTY);
     if (!bundleContents.isEmpty()) {
-      for (ItemStack item : bundleContents.iterate()) {
-        if (item.isIn(ItemTags.CHEST_ARMOR)) {
-            return item;
+      for (ItemStackTemplate item : bundleContents.items()) {
+        if (item.is(ItemTags.CHEST_ARMOR)) {
+          return item.create();
         }
       }
     }
 
     // get the saved chestplate ItemStack as nbt
-    Optional<NbtCompound> chestplateDataNbt = stack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT)
-        .copyNbt().getCompound(ArmoredElytra.CHESTPLATE_DATA.toString());
+    Optional<CompoundTag> chestplateDataNbt = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY)
+        .copyTag().getCompound(ArmoredElytra.CHESTPLATE_DATA.toString());
 
     if (chestplateDataNbt.isEmpty()) {
       return stack;
     }
 
-    NbtCompound chestplateData = chestplateDataNbt.get();
+    CompoundTag chestplateData = chestplateDataNbt.get();
 
     if (chestplateData.isEmpty())
       return stack;
 
     // Convert the Nbt data to an ItemStack
-    return ItemStack.CODEC.parse(RegistryOps.of(NbtOps.INSTANCE, player.getRegistryManager()), chestplateData).resultOrPartial().orElse(stack);
+    return ItemStack.CODEC.parse(RegistryOps.create(NbtOps.INSTANCE, player.registryAccess()), chestplateData)
+        .resultOrPartial().orElse(stack);
   }
 
   public static ItemStack modifyStackWithElytra(ItemStack stack) {
-    var player = MinecraftClient.getInstance().player;
-    if (!stack.isOf(Items.ELYTRA) || player == null)
+    var player = Minecraft.getInstance().player;
+    if (!stack.is(Items.ELYTRA) || player == null)
       return stack;
-    
+
     // Vanilla Tweaks compatibility
-    BundleContentsComponent bundleContents = stack.getOrDefault(DataComponentTypes.BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
+    BundleContents bundleContents = stack.getOrDefault(DataComponents.BUNDLE_CONTENTS, BundleContents.EMPTY);
     if (!bundleContents.isEmpty()) {
-      for (ItemStack item : bundleContents.iterate()) {
-        if (item.isOf(Items.ELYTRA)) {
-            return item;
+      for (ItemStackTemplate item : bundleContents.items()) {
+        if (item.is(Items.ELYTRA)) {
+          return item.create();
         }
       }
     }
 
     // get the saved elytra ItemStack as nbt
-    Optional<NbtCompound> elytraDataNbt = stack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT)
-        .copyNbt().getCompound(ArmoredElytra.ELYTRA_DATA.toString());
+    Optional<CompoundTag> elytraDataNbt = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY)
+        .copyTag().getCompound(ArmoredElytra.ELYTRA_DATA.toString());
 
     if (elytraDataNbt.isEmpty())
       return stack;
 
-    NbtCompound elytraData = elytraDataNbt.get();
+    CompoundTag elytraData = elytraDataNbt.get();
 
     if (elytraData.isEmpty())
       return stack;
 
     // Convert the Nbt data to an ItemStack
-    return ItemStack.CODEC.parse(RegistryOps.of(NbtOps.INSTANCE, player.getRegistryManager()), elytraData).resultOrPartial().orElse(stack);
+    return ItemStack.CODEC.parse(RegistryOps.create(NbtOps.INSTANCE, player.registryAccess()), elytraData)
+        .resultOrPartial().orElse(stack);
   }
 }

@@ -11,54 +11,55 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import dorkix.armored.elytra.ArmoredElytra;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.BundleContentsComponent;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.entity.ExperienceOrbEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.registry.RegistryOps;
-import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.screen.GrindstoneScreenHandler;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerContext;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
+import net.minecraft.resources.RegistryOps;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.GrindstoneMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.BundleContents;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.phys.Vec3;
 
-@Mixin(GrindstoneScreenHandler.class)
-public abstract class GrindStoneMixin extends ScreenHandler {
+@Mixin(GrindstoneMenu.class)
+public abstract class GrindStoneMixin extends AbstractContainerMenu {
 
-    protected GrindStoneMixin(ScreenHandlerType<?> type, int syncId) {
+    protected GrindStoneMixin(MenuType<?> type, int syncId) {
         super(type, syncId);
     }
 
     @Shadow
     @Final
-    private ScreenHandlerContext context;
+    private ContainerLevelAccess access;
 
     @Shadow
     @Final
-    private Inventory result;
+    private Container resultSlots;
 
     @Shadow
     @Final
-    Inventory input;
+    Container repairSlots;
 
-    @Inject(method = "Lnet/minecraft/screen/GrindstoneScreenHandler;updateResult()V", at = @At("RETURN"))
+    @Inject(method = "Lnet/minecraft/world/inventory/GrindstoneMenu;createResult()V", at = @At("RETURN"))
     private void replaceArmoredElytraResult(CallbackInfo ci) {
-        var inputItem1 = this.input.getStack(0);
-        var inputItem2 = this.input.getStack(1);
-        if (inputItem1.isOf(Items.ELYTRA)) {
+        var inputItem1 = this.repairSlots.getItem(0);
+        var inputItem2 = this.repairSlots.getItem(1);
+        if (inputItem1.is(Items.ELYTRA)) {
             showSplitResult(inputItem1, 0);
 
-        } else if (inputItem2.isOf(Items.ELYTRA)) {
+        } else if (inputItem2.is(Items.ELYTRA)) {
             showSplitResult(inputItem2, 1);
         }
     }
@@ -66,23 +67,23 @@ public abstract class GrindStoneMixin extends ScreenHandler {
     private void showSplitResult(ItemStack inputItem, int slot) {
 
         // get the saved chestplate ItemStack as nbt
-        Optional<NbtCompound> armorDataNbt = inputItem
-                .getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT)
-                .copyNbt().getCompound(ArmoredElytra.CHESTPLATE_DATA.toString());
-        Optional<NbtCompound> elytraDataNbt = inputItem
-                .getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT)
-                .copyNbt().getCompound(ArmoredElytra.ELYTRA_DATA.toString());
+        Optional<CompoundTag> armorDataNbt = inputItem
+                .getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY)
+                .copyTag().getCompound(ArmoredElytra.CHESTPLATE_DATA.toString());
+        Optional<CompoundTag> elytraDataNbt = inputItem
+                .getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY)
+                .copyTag().getCompound(ArmoredElytra.ELYTRA_DATA.toString());
 
         // Vanilla Tweaks Compatibility
-        BundleContentsComponent bundleContents = inputItem
-                .getOrDefault(DataComponentTypes.BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
+        BundleContents bundleContents = inputItem
+                .getOrDefault(DataComponents.BUNDLE_CONTENTS, BundleContents.EMPTY);
         if (!bundleContents.isEmpty()) {
-            bundleContents.iterate().forEach(item -> {
-                if (item.isIn(ItemTags.CHEST_ARMOR)) {
-                    this.context.run((world, blockpos) -> {
-                        this.result.setStack(slot, item);
+            bundleContents.items().forEach(item -> {
+                if (item.is(ItemTags.CHEST_ARMOR)) {
+                    this.access.execute((world, blockpos) -> {
+                        this.resultSlots.setItem(slot, item.create());
                     });
-                    sendContentUpdates();
+                    broadcastChanges();
                     return;
                 }
             });
@@ -92,89 +93,92 @@ public abstract class GrindStoneMixin extends ScreenHandler {
             return;
         }
 
-        NbtCompound elytraData = elytraDataNbt.get();
-        NbtCompound armorData = armorDataNbt.get();
+        CompoundTag elytraData = elytraDataNbt.get();
+        CompoundTag armorData = armorDataNbt.get();
 
         // if any of the source item data is missing skip this action
         if (armorData.isEmpty() || elytraData.isEmpty())
             return;
 
         // if found set the GrindStone result slot to contain the chestplate item
-        this.context.run((world, blockpos) -> {
-            this.result.setStack(slot,
-                    ItemStack.CODEC.parse(RegistryOps.of(NbtOps.INSTANCE, world.getRegistryManager()), armorData).resultOrPartial().orElse(ItemStack.EMPTY));
+        this.access.execute((world, blockpos) -> {
+            this.resultSlots.setItem(slot,
+                    ItemStack.CODEC.parse(RegistryOps.create(NbtOps.INSTANCE, world.registryAccess()), armorData)
+                            .resultOrPartial().orElse(ItemStack.EMPTY));
         });
 
-        sendContentUpdates();
+        broadcastChanges();
     }
 
     // to access the Grindstone screen and its data in the ResultSlotMixin
-    @Mixin(GrindstoneScreenHandler.class)
+    @Mixin(GrindstoneMenu.class)
     public interface GrindstoneScreenHandlerAccessor {
         @Accessor
-        Inventory getResult();
+        Container getResultSlots();
 
         @Accessor
-        Inventory getInput();
+        Container getRepairSlots();
 
         @Accessor
-        ScreenHandlerContext getContext();
+        ContainerLevelAccess getAccess();
     }
 
-    // target GrindstoneScreenHandler's result slot
-    @Mixin(targets = "net/minecraft/screen/GrindstoneScreenHandler$4")
+    // target GrindstoneMenu's result slot
+    @Mixin(targets = "net/minecraft/world/inventory/GrindstoneMenu$4")
     public static abstract class ResultSlotMixin extends Slot {
-        public ResultSlotMixin(Inventory inventory, int slot, int x, int y) {
+        public ResultSlotMixin(Container inventory, int slot, int x, int y) {
             super(inventory, slot, x, y);
         }
 
-        @Shadow
+        @Shadow(aliases = "this$0")
         @Final
-        GrindstoneScreenHandler field_16780;
+        GrindstoneMenu grindstoneMenu;
 
         // try split the elytra for the given slot
         private boolean trySplitArmoredElytra(int slot) {
-            var armoredElytra = ((GrindstoneScreenHandlerAccessor) field_16780).getInput().getStack(slot);
+            var armoredElytra = ((GrindstoneScreenHandlerAccessor) grindstoneMenu).getRepairSlots().getItem(slot);
             // get the armored elytra source items nbt data
-            NbtCompound customData = armoredElytra
-                    .getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT)
-                    .copyNbt();
+            CompoundTag customData = armoredElytra
+                    .getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY)
+                    .copyTag();
 
-            Optional<NbtCompound> elytraDataNbt = customData.getCompound(ArmoredElytra.ELYTRA_DATA.toString());
-            Optional<NbtCompound> armorDataNbt = customData.getCompound(ArmoredElytra.CHESTPLATE_DATA.toString());
+            Optional<CompoundTag> elytraDataNbt = customData.getCompound(ArmoredElytra.ELYTRA_DATA.toString());
+            Optional<CompoundTag> armorDataNbt = customData.getCompound(ArmoredElytra.CHESTPLATE_DATA.toString());
 
             if (elytraDataNbt.isEmpty() || armorDataNbt.isEmpty()) {
                 return false;
             }
 
-            NbtCompound elytraData = elytraDataNbt.get();
-            NbtCompound armorData = armorDataNbt.get();
+            CompoundTag elytraData = elytraDataNbt.get();
+            CompoundTag armorData = armorDataNbt.get();
 
             // if not an armored elytra return to normal functioning
             if (elytraData.isEmpty() || armorData.isEmpty()) {
                 return false;
             }
-            var context = ((GrindstoneScreenHandlerAccessor) field_16780).getContext();
+            var context = ((GrindstoneScreenHandlerAccessor) grindstoneMenu).getAccess();
 
-            context.run((world, blockPos) -> {
+            context.execute((world, blockPos) -> {
                 // spawn a little xp
-                if (world instanceof ServerWorld) {
-                    ExperienceOrbEntity.spawn((ServerWorld) world, blockPos.up().toCenterPos(), 1);
+                if (world instanceof ServerLevel serverLevel) {
+                    ExperienceOrb.award(serverLevel, Vec3.atCenterOf(blockPos.above()), 1);
                 }
 
                 // play the grindstone sound
-                world.playSound(null, blockPos, SoundEvents.BLOCK_GRINDSTONE_USE,
-                        SoundCategory.BLOCKS);
+                world.playSound(null, blockPos, SoundEvents.GRINDSTONE_USE,
+                        SoundSource.BLOCKS);
 
                 // replace the input armored elytra with the source elytra
-                var registryNbtOps = RegistryOps.of(NbtOps.INSTANCE, world.getRegistryManager());
-                var sourceElytra = ItemStack
-                        .CODEC.parse(registryNbtOps, elytraData).resultOrPartial().orElse(ItemStack.EMPTY);;
-                var sourceArmor = ItemStack
-                        .CODEC.parse(registryNbtOps, armorData).resultOrPartial().orElse(ItemStack.EMPTY);;
+                var registryNbtOps = RegistryOps.create(NbtOps.INSTANCE, world.registryAccess());
+                var sourceElytra = ItemStack.CODEC.parse(registryNbtOps, elytraData).resultOrPartial()
+                        .orElse(ItemStack.EMPTY);
+                ;
+                var sourceArmor = ItemStack.CODEC.parse(registryNbtOps, armorData).resultOrPartial()
+                        .orElse(ItemStack.EMPTY);
+                ;
 
                 // check for compatible later added enchants
-                var currentEnchants = armoredElytra.getEnchantments().getEnchantments();
+                var currentEnchants = armoredElytra.getEnchantments().keySet();
                 for (var ce : currentEnchants) {
                     if (!ce.value().isSupportedItem(sourceElytra)) {
                         continue;
@@ -185,12 +189,12 @@ public abstract class GrindStoneMixin extends ScreenHandler {
                     int armorLevel = sourceArmor.getEnchantments().getLevel(ce);
 
                     if (currentLevel > elytraLevel && elytraLevel > 0 && elytraLevel >= armorLevel) {
-                        sourceElytra.addEnchantment(ce, currentLevel);
+                        sourceElytra.enchant(ce, currentLevel);
                     }
 
                 }
 
-                ((GrindstoneScreenHandlerAccessor) field_16780).getInput().setStack(slot,
+                ((GrindstoneScreenHandlerAccessor) grindstoneMenu).getRepairSlots().setItem(slot,
                         sourceElytra);
             });
             return true;
@@ -198,20 +202,20 @@ public abstract class GrindStoneMixin extends ScreenHandler {
 
         // try split the elytra for the given slot (Vanilla Tweaks Format)
         private boolean trySplitVTArmoredElytra(int slot) {
-            BundleContentsComponent bundleContents = ((GrindstoneScreenHandlerAccessor) field_16780)
-                    .getInput().getStack(slot).getOrDefault(DataComponentTypes.BUNDLE_CONTENTS,
-                            BundleContentsComponent.DEFAULT);
+            BundleContents bundleContents = ((GrindstoneScreenHandlerAccessor) grindstoneMenu)
+                    .getRepairSlots().getItem(slot).getOrDefault(DataComponents.BUNDLE_CONTENTS,
+                            BundleContents.EMPTY);
             if (bundleContents.isEmpty())
                 return false;
- 
-            var context = ((GrindstoneScreenHandlerAccessor) field_16780).getContext();
-            bundleContents.iterate().forEach(item -> {
-                if (item.isOf(Items.ELYTRA)) {
-                    context.run((world, blockPos) -> {
-                        world.playSound(null, blockPos, SoundEvents.BLOCK_GRINDSTONE_USE,
-                                SoundCategory.BLOCKS);
-                        ((GrindstoneScreenHandlerAccessor) field_16780).getInput().setStack(slot,
-                                item);
+
+            var context = ((GrindstoneScreenHandlerAccessor) grindstoneMenu).getAccess();
+            bundleContents.items().forEach(item -> {
+                if (item.is(Items.ELYTRA)) {
+                    context.execute((world, blockPos) -> {
+                        world.playSound(null, blockPos, SoundEvents.GRINDSTONE_USE,
+                                SoundSource.BLOCKS);
+                        ((GrindstoneScreenHandlerAccessor) grindstoneMenu).getRepairSlots().setItem(slot,
+                                item.create());
                     });
                 }
             });
@@ -219,14 +223,14 @@ public abstract class GrindStoneMixin extends ScreenHandler {
         }
 
         // When the user takes out result chestplate from the
-        // GrindStoneMixin.showSplitResult() try getting the source elytry from the
+        // GrindStoneMixin.showSplitResult() try getting the source elytra from the
         // input slots, replace the armored elytra with the source elytra and cancel the
-        // takout function so that the grindstone does not destroy the source elytra in
+        // takeout function so that the grindstone does not destroy the source elytra in
         // the input slot.
         // If the input slots do not contain an armored elytra just return to normal
         // grindstone function
-        @Inject(method = "onTakeItem", at = @At("HEAD"), cancellable = true)
-        private void takeSeparatedChestplate(PlayerEntity player, ItemStack stack,
+        @Inject(method = "onTake", at = @At("HEAD"), cancellable = true)
+        private void takeSeparatedChestplate(Player player, ItemStack stack,
                 CallbackInfo ci) {
 
             if (!trySplitArmoredElytra(0) && !trySplitArmoredElytra(1)

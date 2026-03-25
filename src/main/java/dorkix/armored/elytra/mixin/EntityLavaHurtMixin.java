@@ -6,59 +6,59 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import dorkix.armored.elytra.ArmoredElytra;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.BundleContentsComponent;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.registry.RegistryOps;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.world.World;
+import net.minecraft.resources.RegistryOps;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.BundleContents;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.level.Level;
 
 @Mixin(Entity.class)
 public abstract class EntityLavaHurtMixin {
-    @Inject(method = "setOnFireFromLava", at = @At("TAIL"))
+    @Inject(method = "lavaHurt", at = @At("TAIL"))
     private void splitNetheriteInLava(CallbackInfo ci) {
         if ((Entity) (Object) this instanceof ItemEntity) {
             ItemEntity thisObject = (ItemEntity) (Object) this;
 
-            ItemStack itemStack = thisObject.getStack();
-            if (itemStack.isOf(Items.ELYTRA)) {
-                BundleContentsComponent bundleContents = itemStack.getOrDefault(
-                        DataComponentTypes.BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
+            ItemStack itemStack = thisObject.getItem();
+            if (itemStack.is(Items.ELYTRA)) {
+                BundleContents bundleContents = itemStack.getOrDefault(
+                        DataComponents.BUNDLE_CONTENTS, BundleContents.EMPTY);
                 if (!bundleContents.isEmpty()) {
                     // Handle Vanilla Tweaks data
-                    bundleContents.iterate().forEach(item -> {
-                        if (item.isOf(Items.NETHERITE_CHESTPLATE)) {
-                            thisObject.setStack(item);
+                    bundleContents.items().forEach(item -> {
+                        if (item.is(Items.NETHERITE_CHESTPLATE)) {
+                            thisObject.setItem(item.create());
                         }
                     });
                 } else {
                     // Handle native mod data
-                    Optional<NbtCompound> armorDataNbt = itemStack
-                            .getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT)
-                            .copyNbt().getCompound(ArmoredElytra.CHESTPLATE_DATA.toString());
+                    Optional<CompoundTag> armorDataNbt = itemStack
+                            .getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY)
+                            .copyTag().getCompound(ArmoredElytra.CHESTPLATE_DATA.toString());
                     if (armorDataNbt.isEmpty())
                         return;
 
-                    NbtCompound armorData = armorDataNbt.get();
+                    CompoundTag armorData = armorDataNbt.get();
                     if (armorData.isEmpty())
                         return;
 
                     ItemStack chestplate = ItemStack.CODEC
-                            .parse(RegistryOps.of(NbtOps.INSTANCE, thisObject.getEntityWorld().getRegistryManager()),
+                            .parse(RegistryOps.create(NbtOps.INSTANCE, thisObject.level().registryAccess()),
                                     armorData)
                             .resultOrPartial().orElse(ItemStack.EMPTY);
-                    ((ItemEntity) (Object) this).setStack(chestplate);
+                    ((ItemEntity) (Object) this).setItem(chestplate);
                 }
-                World world = thisObject.getEntityWorld();
+                Level world = thisObject.level();
                 world.playSound((Entity) null, thisObject.getX(), thisObject.getY(),
-                        thisObject.getZ(), SoundEvents.ENTITY_GENERIC_BURN,
-                        thisObject.getSoundCategory(), 0.4F, 2.0F + thisObject.getRandom().nextFloat() * 0.4F);
+                        thisObject.getZ(), SoundEvents.GENERIC_BURN,
+                        thisObject.getSoundSource(), 0.4F, 2.0F + thisObject.getRandom().nextFloat() * 0.4F);
             }
         }
     }

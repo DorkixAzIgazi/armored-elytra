@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "armored_elytra:item/elytra",
+    "layer1": "armored_elytra:item/iron_chestplate",
+    "layer2": "armored_elytra:item/chestplate_trim_iron_darker"
+  }
+}
