@@ -18,15 +18,15 @@ The output lands in `src/client/generated/resources/` and is included in the mod
 
 ## Prerequisites
 
-### Java 21
+### Java 25
 
-The data generator runs on Java 21. To check whether it is already installed, open a terminal and run:
+The data generator runs on Java 25. To check whether it is already installed, open a terminal and run:
 
 ```
 java -version
 ```
 
-You should see output like `openjdk version "21.x.x"`. If the command is not found or the version is below 21, download and install a JDK 21 build — [Eclipse Temurin](https://adoptium.net/) is a free, widely-used option. During installation, tick the option to set `JAVA_HOME` and add Java to your `PATH` so that the `java` command works from any terminal.
+You should see output like `openjdk version "25.x.x"`. If the command is not found or the version is below 21, download and install a JDK 25 build — [Eclipse Temurin](https://adoptium.net/) is a free, widely-used option. During installation, tick the option to set `JAVA_HOME` and add Java to your `PATH` so that the `java` command works from any terminal.
 
 ### Git and the mod source code
 
