@@ -5,5 +5,8 @@
   "client": ["ArmoredElytraModelMixin", "ElytraRendererMixin"],
   "injectors": {
     "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
   }
 }
