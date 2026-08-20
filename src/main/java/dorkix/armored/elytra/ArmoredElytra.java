@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
@@ -27,6 +28,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
@@ -69,8 +71,11 @@ public class ArmoredElytra implements ModInitializer {
 					ItemStack.CODEC.encodeStart(RegistryOps.create(NbtOps.INSTANCE, world.registryAccess()), armor).getOrThrow());
 		});
 
-		// ChestPlate Durability
-		if (armor.getMaxDamage() > newElytra.getMaxDamage()) {
+		// Durability
+		if (newElytra.nextDamageWillBreak()) {
+			newElytra.set(DataComponents.MAX_DAMAGE, newElytra.getMaxDamage());
+			newElytra.set(DataComponents.DAMAGE, newElytra.getDamageValue());
+		} else if (armor.getMaxDamage() > newElytra.getMaxDamage()) {
 			newElytra.set(DataComponents.MAX_DAMAGE, armor.getMaxDamage());
 			newElytra.set(DataComponents.DAMAGE, armor.getDamageValue());
 		} else {
@@ -78,16 +83,23 @@ public class ArmoredElytra implements ModInitializer {
 			newElytra.set(DataComponents.DAMAGE, elytra.getDamageValue());
 		}
 
-		// Copy Attribute modifiers
+		// Copy Attribute modifiers - merge elytra + armor modifiers
 		var armor_attr = armor.get(DataComponents.ATTRIBUTE_MODIFIERS);
+		var elytra_attr = newElytra.get(DataComponents.ATTRIBUTE_MODIFIERS);
 		var builder = ItemAttributeModifiers.builder();
-		for (var aa : armor_attr.modifiers()) {
-			builder.add(aa.attribute(), aa.modifier(), aa.slot());
+		if (elytra_attr != null) {
+			for (var ea : elytra_attr.modifiers()) {
+				builder.add(ea.attribute(), ea.modifier(), ea.slot());
+			}
 		}
-		var attr = builder.build();
+		if (armor_attr != null) {
+			for (var aa : armor_attr.modifiers()) {
+				builder.add(aa.attribute(), aa.modifier(), aa.slot());
+			}
+		}
 		newElytra.applyComponents(
 				DataComponentMap.builder().set(DataComponents.ATTRIBUTE_MODIFIERS,
-						attr).build());
+						builder.build()).build());
 
 		// Copy Armor Trims
 		var trims = armor.get(DataComponents.TRIM);
@@ -106,7 +118,6 @@ public class ArmoredElytra implements ModInitializer {
 		}
 
 		// Copy Enchantments
-
 		for (var ench : armor.getEnchantments().keySet()) {
 			int level = 1;
 			var key = ench.unwrapKey();
@@ -187,6 +198,16 @@ public class ArmoredElytra implements ModInitializer {
 			return false;
 		}
 
+		// Vanilla Tweaks compatibility
+		BundleContents bundleContents = elytra.getOrDefault(DataComponents.BUNDLE_CONTENTS, BundleContents.EMPTY);
+		if (!bundleContents.isEmpty()) {
+			var hasArmor = bundleContents.items().stream().anyMatch(item -> item.is(ItemTags.CHEST_ARMOR));
+			var hasElytra = bundleContents.items().stream().anyMatch(item -> item.is(Items.ELYTRA));
+			if (hasArmor && hasElytra) {
+				return true;
+			}
+		}
+
 		CompoundTag customData = elytra
 				.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY)
 				.copyTag();
@@ -206,5 +227,49 @@ public class ArmoredElytra implements ModInitializer {
 		}
 
 		return true;
+	}
+
+	public static ItemStack getEmbeddedChestplate(ItemStack elytra, RegistryAccess registryAccess) {
+		// Vanilla Tweaks compatibility
+		BundleContents bundleContents = elytra.getOrDefault(DataComponents.BUNDLE_CONTENTS, BundleContents.EMPTY);
+		if (!bundleContents.isEmpty()) {
+			var hasArmor = bundleContents.items().stream().filter(item -> item.is(ItemTags.CHEST_ARMOR)).findFirst();
+			if (hasArmor.isPresent()) {
+				return hasArmor.get().create();
+			}
+		}
+
+		CompoundTag customData = elytra.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+
+		Optional<CompoundTag> armorDataNbt = customData.getCompound(ArmoredElytra.CHESTPLATE_DATA.toString());
+		if (armorDataNbt.isEmpty()) {
+			return ItemStack.EMPTY;
+		}
+
+		return ItemStack.CODEC
+				.parse(RegistryOps.create(NbtOps.INSTANCE, registryAccess), armorDataNbt.get())
+				.resultOrPartial().orElse(ItemStack.EMPTY);
+	}
+
+	public static ItemStack getEmbeddedElytra(ItemStack elytra, RegistryAccess registryAccess) {
+		// Vanilla Tweaks compatibility
+		BundleContents bundleContents = elytra.getOrDefault(DataComponents.BUNDLE_CONTENTS, BundleContents.EMPTY);
+		if (!bundleContents.isEmpty()) {
+			var hasElytra = bundleContents.items().stream().filter(item -> item.is(Items.ELYTRA)).findFirst();
+			if (hasElytra.isPresent()) {
+				return hasElytra.get().create();
+			}
+		}
+
+		CompoundTag customData = elytra.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+
+		Optional<CompoundTag> elytraDataNbt = customData.getCompound(ArmoredElytra.ELYTRA_DATA.toString());
+		if (elytraDataNbt.isEmpty()) {
+			return ItemStack.EMPTY;
+		}
+
+		return ItemStack.CODEC
+				.parse(RegistryOps.create(NbtOps.INSTANCE, registryAccess), elytraDataNbt.get())
+				.resultOrPartial().orElse(ItemStack.EMPTY);
 	}
 }

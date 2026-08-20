@@ -6,7 +6,7 @@
 ![Mod loader: Fabric](https://img.shields.io/badge/modloader-Fabric-1976d2?style=flat-square&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAFHGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDIgNzkuMTYwOTI0LCAyMDE3LzA3LzEzLTAxOjA2OjM5ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOCAoV2luZG93cykiIHhtcDpDcmVhdGVEYXRlPSIyMDE4LTEyLTE2VDE2OjU0OjE3LTA4OjAwIiB4bXA6TW9kaWZ5RGF0ZT0iMjAxOS0wNy0yOFQyMToxNzo0OC0wNzowMCIgeG1wOk1ldGFkYXRhRGF0ZT0iMjAxOS0wNy0yOFQyMToxNzo0OC0wNzowMCIgZGM6Zm9ybWF0PSJpbWFnZS9wbmciIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiIHBob3Rvc2hvcDpJQ0NQcm9maWxlPSJzUkdCIElFQzYxOTY2LTIuMSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDowZWRiMWMyYy1mZjhjLWU0NDEtOTMxZi00OTVkNGYxNGM3NjAiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MGVkYjFjMmMtZmY4Yy1lNDQxLTkzMWYtNDk1ZDRmMTRjNzYwIiB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6MGVkYjFjMmMtZmY4Yy1lNDQxLTkzMWYtNDk1ZDRmMTRjNzYwIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY3JlYXRlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDowZWRiMWMyYy1mZjhjLWU0NDEtOTMxZi00OTVkNGYxNGM3NjAiIHN0RXZ0OndoZW49IjIwMTgtMTItMTZUMTY6NTQ6MTctMDg6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE4IChXaW5kb3dzKSIvPiA8L3JkZjpTZXE+IDwveG1wTU06SGlzdG9yeT4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4/HiGMAAAAtUlEQVRYw+XXrQqAMBQF4D2P2eBL+QIG8RnEJFaNBjEum+0+zMQLtwwv+wV3ZzhhMDgfJ0wUSinxZUQWgKos1JP/AbD4OneIDyQPwCFniA+EJ4CaXm4TxAXCC0BNHgLhAdAnx9hC8PwGSRtAFVMQjF7cNTWED8B1cgwW20yfJgAvrssAsZ1cB3g/xckAxr6FmCDU5N6f488BrpCQ4rQBJkiMYh4ACmLzwOQF0CExinkCsvw7vgGikl+OotaKRwAAAABJRU5ErkJggg==)
 
 ![Version](https://img.shields.io/badge/Minecraft_version-26.2-3b8526?style=flat-square&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAGUExURf///wAAAFXC034AAAACdFJOU/8A5bcwSgAAAAlwSFlzAAAOwwAADsMBx2+oZAAAAIZJREFUeF7tzjEKwDAMBEH7/59Oc7gTNoFgBWZLcYgZ83IAAAAAAAAA/QBjU2ZlmZVltgIAAAAAAAAAAAAAAAAAAOgH2JU/ZZkdBwAAAAAAANAfkL+vy5syAAAAAAAAAAAAAAAAAACA/wFyLstslXMZAAAAAAAAQH/A1wEAAAAAAABcBsz5AFHFLAEnEyoZAAAAAElFTkSuQmCC)
-![Mod](https://img.shields.io/badge/mod_version-1.14.1-3b8526?style=flat-square)
+![Mod](https://img.shields.io/badge/mod_version-1.15.0-3b8526?style=flat-square)
 
 ![Modrinth](https://img.shields.io/badge/modrinth-Armored_Elytra-1bd96a?style=flat-square&color=1bd96a&link=https%3A%2F%2Fmodrinth.com%2Fmod%2Felytra-armor)
 ![Curseforge](https://img.shields.io/badge/curseforge-Armored_Elytra_--_Fabric-f16536?style=flat-square&color=f16536&link=https%3A%2F%2Fwww.curseforge.com%2Fminecraft%2Fmc-mods%2Farmored-elytra-fabric)
@@ -30,13 +30,7 @@ You can split the armored elytra in the grindstone to get back your original ite
 
 ### Server side
 
-All logic is handled on the server, client side install is only required for model rendering.
-
-#### Vanilla Tweaks
-
-The mod is compatible with the Vanilla Tweaks Armored Elytra datapack since version 1.21.5 v1.6.0.
-Installing the mod on the client will make the player models render with both the armor and the elytra textures.
-The mod supports splitting armored elytras created with the datapack.
+All logic is handled on the server, client side install is only required for item icon and player model rendering.
 
 ### Client side rendering
 
@@ -52,8 +46,54 @@ If installed on the client side, both the elytra and the chestplate are visible.
 
 Armor type, trim color, and leather color icons with the elytra shown at the back.
 
-Custom icons are visible for players who have the mod or the texturepack installed on the client.
+Custom icons are visible for players who have the mod installed on the client.
 
 ![Custom icons](/docs/custom_item_models.png)
 
-> **Using a custom texture pack?** See the [guide for generating textures from a resource pack](docs/custom-textures-datagen.md) to match the item icons to your pack's artwork.
+### Resourcepacks
+
+The mod no longer uses a custom resourcepack for the combined item icons. It modifies to the code to actually render the two items on top of each other with a slight vertical offset. Any custom texture pack is supported, but might not totally correct depending on the item icons. (Any size x16, x32, etc...)
+
+The previous resourcepack [Armored-Elytra-Icons-v1.14.0.zip](https://github.com/DorkixAzIgazi/armored-elytra/releases/download/26.2-v1.14.0/Armored-Elytra-Icons-v1.14.0.zip) will continue to work for default minecraft armors for players who do not install the mod on their client, but play on servers that use this mod. (Might drop support in the future, as a server owner please recommend installing the mod for players if possible.)
+
+### Compatibility
+
+#### For Players
+
+The following mods and datapacks have been tested and are compatible with this mod:
+
+**Mods**
+
+| Mod                                                                                       | Version                            | Features                                                                                                                                              |
+| ----------------------------------------------------------------------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Advanced Netherite](https://modrinth.com/mod/advanced-netherite)                         | fabric-2.4.2-mc26.2                | Armored Elytra will have pacifying effects from mod chestplates                                                                                       |
+| [Elytra Trims](https://modrinth.com/mod/elytra-trims)                                     | Elytra Trims Fabric 4.8.2 for 26.2 | Armored Elytra can be made with elytra items already having armor trims. Both Armor and elytra trims will show on item icons and player models.       |
+| [Detail Armor Bar Reconstructed](https://modrinth.com/mod/detail-armor-bar-reconstructed) | 5.3.2-26.2-fabric                  | Armor bar will show armor and elytra icons for Armored Elytra items. (Enable multi line armor bars in the mod options when wearing full set of armor) |
+
+**Datapacks**
+
+| Datapack                                                                       | Version          | Features                                                                                                                                                                                      |
+| ------------------------------------------------------------------------------ | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Stellarity](https://modrinth.com/datapack/stellarity)                         | 5.5.5+mod        | Armored Elytra will have Stellarity specific item attributes like lower gravity.                                                                                                              |
+| [Vanilla Tweaks - Armored Elytra](https://vanillatweaks.net/picker/datapacks/) | v2.0.11 for 26.2 | Armored elytra items made with this datapack will have combined item icon and combined player model rendering shown above. Splitting the item inside the GrindStone inventory will also work. |
+
+**Having compatibility issues?** Report them [here](https://github.com/DorkixAzIgazi/armored-elytra/issues) by creating an issue describing which mods and versions you are using!
+
+#### For Mod Developers
+
+Any modded armor which does not have any special effects are compatible by default. For example a new modded armor with a custom armor material like emerald or obsidian. The chestplate should have the item tag `#minecraft:chest_armor`.
+Any elytra item which is an extension of the default `minecraft:elytra` should work.
+
+Contact me here with a Github issue if you would like to have mod compatibility with your mod or create the integration inside your mod with using the following functions from this mod:
+
+> Query if the item is an Armored Elytra item:
+
+`boolean dorkix.armored.elytra.ArmoredElytra.isArmoredElytra(ItemStack elytra)` (static function)
+
+> Get the original armor item used to create the Armored Elytra:
+
+`ItemStack dorkix.armored.elytra.ArmoredElytra.getEmbeddedChestplate(ItemStack elytra, RegistryAccess registryAccess)` (static function)
+
+> Get the original elytra item used to create the Armored Elytra:
+
+`ItemStack dorkix.armored.elytra.ArmoredElytra.getEmbeddedElytra(ItemStack elytra, RegistryAccess registryAccess)` (static function)

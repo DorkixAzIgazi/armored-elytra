@@ -2,7 +2,13 @@
   "required": true,
   "package": "dorkix.armored.elytra.mixin.client",
   "compatibilityLevel": "JAVA_25",
-  "client": ["ArmoredElytraModelMixin", "ElytraRendererMixin"],
+  "client": [
+    "ArmoredElytraIconMixin",
+    "ArmoredElytraModelMixin",
+    "ElytraRendererMixin",
+    "ItemStackRenderStateAccessor",
+    "LayerRenderStateAccessor"
+  ],
   "injectors": {
     "defaultRequire": 1
   },
