@@ -4,10 +4,12 @@
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "AnvilMenuMixin",
+    "EnderManMixin",
     "EntityLavaHurtMixin",
     "GrindStoneMixin",
     "GrindStoneMixin$GrindstoneScreenHandlerAccessor",
     "GrindStoneMixin$ResultSlotMixin",
+    "PhantomMixin",
     "PiglinAiMixin"
   ],
   "injectors": {

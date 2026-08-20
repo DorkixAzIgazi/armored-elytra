@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
@@ -78,16 +79,23 @@ public class ArmoredElytra implements ModInitializer {
 			newElytra.set(DataComponents.DAMAGE, elytra.getDamageValue());
 		}
 
-		// Copy Attribute modifiers
+		// Copy Attribute modifiers - merge elytra + armor modifiers
 		var armor_attr = armor.get(DataComponents.ATTRIBUTE_MODIFIERS);
+		var elytra_attr = newElytra.get(DataComponents.ATTRIBUTE_MODIFIERS);
 		var builder = ItemAttributeModifiers.builder();
-		for (var aa : armor_attr.modifiers()) {
-			builder.add(aa.attribute(), aa.modifier(), aa.slot());
+		if (elytra_attr != null) {
+			for (var ea : elytra_attr.modifiers()) {
+				builder.add(ea.attribute(), ea.modifier(), ea.slot());
+			}
 		}
-		var attr = builder.build();
+		if (armor_attr != null) {
+			for (var aa : armor_attr.modifiers()) {
+				builder.add(aa.attribute(), aa.modifier(), aa.slot());
+			}
+		}
 		newElytra.applyComponents(
 				DataComponentMap.builder().set(DataComponents.ATTRIBUTE_MODIFIERS,
-						attr).build());
+						builder.build()).build());
 
 		// Copy Armor Trims
 		var trims = armor.get(DataComponents.TRIM);
@@ -206,5 +214,23 @@ public class ArmoredElytra implements ModInitializer {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Extracts the chestplate embedded inside an armored elytra so mixins can
+	 * check its item tags (e.g. mob-pacifying tags added by other mods) even
+	 * though the chestplate itself is not present in any equipment slot.
+	 */
+	public static ItemStack getEmbeddedChestplate(ItemStack elytra, RegistryAccess registryAccess) {
+		CompoundTag customData = elytra.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+
+		Optional<CompoundTag> armorDataNbt = customData.getCompound(ArmoredElytra.CHESTPLATE_DATA.toString());
+		if (armorDataNbt.isEmpty()) {
+			return ItemStack.EMPTY;
+		}
+
+		return ItemStack.CODEC
+				.parse(RegistryOps.create(NbtOps.INSTANCE, registryAccess), armorDataNbt.get())
+				.resultOrPartial().orElse(ItemStack.EMPTY);
 	}
 }
