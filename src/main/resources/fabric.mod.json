@@ -7,15 +7,15 @@
   "authors": ["Dorkix"],
   "contact": {
     "homepage": "https://modrinth.com/project/elytra-armor",
-    "sources": "https://github.com/DorkixAzIgazi/armored-elytra"
+    "sources": "https://github.com/DorkixAzIgazi/armored-elytra",
+    "issues": "https://github.com/DorkixAzIgazi/armored-elytra/issues"
   },
   "license": "MIT",
   "icon": "assets/armored_elytra/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": ["dorkix.armored.elytra.ArmoredElytra"],
-    "client": ["dorkix.armored.elytra.ArmoredElytraClient"],
-    "fabric-datagen": ["dorkix.armored.elytra.ArmoredElytraDataGenerator"]
+    "client": ["dorkix.armored.elytra.ArmoredElytraClient"]
   },
   "mixins": [
     "armored-elytra.mixins.json",

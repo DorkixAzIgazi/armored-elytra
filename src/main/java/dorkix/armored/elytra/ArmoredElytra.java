@@ -28,6 +28,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
@@ -70,8 +71,11 @@ public class ArmoredElytra implements ModInitializer {
 					ItemStack.CODEC.encodeStart(RegistryOps.create(NbtOps.INSTANCE, world.registryAccess()), armor).getOrThrow());
 		});
 
-		// ChestPlate Durability
-		if (armor.getMaxDamage() > newElytra.getMaxDamage()) {
+		// Durability
+		if (newElytra.nextDamageWillBreak()) {
+			newElytra.set(DataComponents.MAX_DAMAGE, newElytra.getMaxDamage());
+			newElytra.set(DataComponents.DAMAGE, newElytra.getDamageValue());
+		} else if (armor.getMaxDamage() > newElytra.getMaxDamage()) {
 			newElytra.set(DataComponents.MAX_DAMAGE, armor.getMaxDamage());
 			newElytra.set(DataComponents.DAMAGE, armor.getDamageValue());
 		} else {
@@ -114,7 +118,6 @@ public class ArmoredElytra implements ModInitializer {
 		}
 
 		// Copy Enchantments
-
 		for (var ench : armor.getEnchantments().keySet()) {
 			int level = 1;
 			var key = ench.unwrapKey();
@@ -195,6 +198,16 @@ public class ArmoredElytra implements ModInitializer {
 			return false;
 		}
 
+		// Vanilla Tweaks compatibility
+		BundleContents bundleContents = elytra.getOrDefault(DataComponents.BUNDLE_CONTENTS, BundleContents.EMPTY);
+		if (!bundleContents.isEmpty()) {
+			var hasArmor = bundleContents.items().stream().anyMatch(item -> item.is(ItemTags.CHEST_ARMOR));
+			var hasElytra = bundleContents.items().stream().anyMatch(item -> item.is(Items.ELYTRA));
+			if (hasArmor && hasElytra) {
+				return true;
+			}
+		}
+
 		CompoundTag customData = elytra
 				.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY)
 				.copyTag();
@@ -216,12 +229,16 @@ public class ArmoredElytra implements ModInitializer {
 		return true;
 	}
 
-	/**
-	 * Extracts the chestplate embedded inside an armored elytra so mixins can
-	 * check its item tags (e.g. mob-pacifying tags added by other mods) even
-	 * though the chestplate itself is not present in any equipment slot.
-	 */
 	public static ItemStack getEmbeddedChestplate(ItemStack elytra, RegistryAccess registryAccess) {
+		// Vanilla Tweaks compatibility
+		BundleContents bundleContents = elytra.getOrDefault(DataComponents.BUNDLE_CONTENTS, BundleContents.EMPTY);
+		if (!bundleContents.isEmpty()) {
+			var hasArmor = bundleContents.items().stream().filter(item -> item.is(ItemTags.CHEST_ARMOR)).findFirst();
+			if (hasArmor.isPresent()) {
+				return hasArmor.get().create();
+			}
+		}
+
 		CompoundTag customData = elytra.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 
 		Optional<CompoundTag> armorDataNbt = customData.getCompound(ArmoredElytra.CHESTPLATE_DATA.toString());
@@ -231,6 +248,28 @@ public class ArmoredElytra implements ModInitializer {
 
 		return ItemStack.CODEC
 				.parse(RegistryOps.create(NbtOps.INSTANCE, registryAccess), armorDataNbt.get())
+				.resultOrPartial().orElse(ItemStack.EMPTY);
+	}
+
+	public static ItemStack getEmbeddedElytra(ItemStack elytra, RegistryAccess registryAccess) {
+		// Vanilla Tweaks compatibility
+		BundleContents bundleContents = elytra.getOrDefault(DataComponents.BUNDLE_CONTENTS, BundleContents.EMPTY);
+		if (!bundleContents.isEmpty()) {
+			var hasElytra = bundleContents.items().stream().filter(item -> item.is(Items.ELYTRA)).findFirst();
+			if (hasElytra.isPresent()) {
+				return hasElytra.get().create();
+			}
+		}
+
+		CompoundTag customData = elytra.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+
+		Optional<CompoundTag> elytraDataNbt = customData.getCompound(ArmoredElytra.ELYTRA_DATA.toString());
+		if (elytraDataNbt.isEmpty()) {
+			return ItemStack.EMPTY;
+		}
+
+		return ItemStack.CODEC
+				.parse(RegistryOps.create(NbtOps.INSTANCE, registryAccess), elytraDataNbt.get())
 				.resultOrPartial().orElse(ItemStack.EMPTY);
 	}
 }
