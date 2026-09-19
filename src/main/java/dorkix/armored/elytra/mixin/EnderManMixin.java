@@ -4,7 +4,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.monster.EnderMan;
+import net.minecraft.world.entity.monster.Enderman;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +23,7 @@ import dorkix.armored.elytra.ArmoredElytra;
  * in the chest equipment slot. This mixin re-checks the embedded chestplate
  * for that same tag, without requiring any dependency on those mods.
  */
-@Mixin(EnderMan.class)
+@Mixin(Enderman.class)
 public class EnderManMixin {
 
   private static final TagKey<Item> PACIFY_ENDERMEN_ARMOR = TagKey.create(Registries.ITEM,
