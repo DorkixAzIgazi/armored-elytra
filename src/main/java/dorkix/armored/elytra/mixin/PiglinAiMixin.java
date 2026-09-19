@@ -21,7 +21,9 @@ public class PiglinAiMixin {
     ItemStack elytra = livingEntity.getItemBySlot(EquipmentSlot.CHEST);
     if (ArmoredElytra.isArmoredElytra(elytra)) {
       ItemStack armorItemStack = ArmoredElytra.getEmbeddedChestplate(elytra, livingEntity.registryAccess());
-      cbi.setReturnValue(armorItemStack.is(ItemTags.PIGLIN_SAFE_ARMOR));
+      if (armorItemStack.is(ItemTags.PIGLIN_SAFE_ARMOR)) {
+        cbi.setReturnValue(true);
+      }
     }
   }
 }
